@@ -30,7 +30,7 @@ if python_version != "":
         print("\nEnter a valid python version or leave empty")
         raise Exception("\nEnter a valid python version or leave empty")
 
-    cpython_version.replace("11", python_version)
+    cpython_version = cpython_version.replace("11", python_version)
 
 
 relative_or_absolute = input(
