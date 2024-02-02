@@ -1,4 +1,4 @@
-from os import path
+from os import path, name as os_name
 from os.path import isdir, isfile, join
 from os import listdir, remove, rename, replace
 import re
@@ -57,9 +57,11 @@ if remove_py_or_not_input != "Y" and remove_py_or_not_input != "N":
 
 remove_py = remove_py_or_not_input == "Y"
 
+is_windows = os_name == "nt"
+
 command = subprocess.Popen(
         cwd=final_path,
-        args="python -m compileall .",
+        args=f"python{'' if is_windows else '3'} -m compileall .",
         stdout=subprocess.PIPE,
         shell=True,
     )
