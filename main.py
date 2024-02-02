@@ -95,6 +95,12 @@ def move_pyc_file(current_path: path):
                             join(previous_dir_path, item_to_be_removed)
                         ) and re.fullmatch(python_file_regex, item_to_be_removed):
                             remove(join(previous_dir_path, item_to_be_removed))
+                            
+        if isfile(item_path) and cpython_version in item:
+            new_name: str = str(item).replace(cpython_version, "")
+            new_name_path = join(current_path, new_name)
+
+            rename(item_path, new_name_path)
 
         if isdir(item_path) and not item in virtual_environment_names:
             move_pyc_file(item_path)
