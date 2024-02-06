@@ -3,6 +3,14 @@ from os.path import isdir, isfile, join
 from os import listdir, remove, rename, replace
 import re
 import subprocess
+import argparse
+
+parser = argparse.ArgumentParser(description='Convert all yo pyc')
+parser.add_argument('-v', '--python_version', type=int, required=True, help='Enter the version of your python, 11 for python 3.11, 9 for python 3.9 and so on')
+parser.add_argument('-p', '--path', type=str, required=True, help='Path to your python project, for example: /home/user/project/')
+parser.add_argument('-r', '--remove', required=False, action="store_true", help='if you define this argument all of the .py files will be removed')
+
+args = parser.parse_args()
 
 python_file_regex = re.compile("^.*\.py$")
 
@@ -21,41 +29,13 @@ base_dir = "."
 
 cpython_version = ".cpython-311"
 
-python_version = input(
-    "\nEnter your python version, 9 for python 3.9, 10 for python 3.10 and so on, or just press Enter, the default is python 3.11.\nYour python version or just press Enter: "
-)
+python_version = args.python_version
 
-if python_version != "":
-    if not python_version.isdigit():
-        print("\nEnter a valid python version or leave empty")
-        raise Exception("\nEnter a valid python version or leave empty")
+cpython_version = cpython_version.replace("11", str(python_version))
 
-    cpython_version = cpython_version.replace("11", python_version)
+final_path = args.path
 
-
-relative_or_absolute = input(
-    "\nI'm going to ask you for your project path, will it be relative to this directory or absolute?\nEnter R for relative or A for absolute R/A: "
-)
-
-if relative_or_absolute != "R" and relative_or_absolute != "A":
-    raise Exception("\nEnter R or A")
-
-entered_path = input(
-    "\nEnter your relative or absolute path based on your previous answer,\nYOU ARE DOING THIS BY YOUR OWN RISK, so please enter the correct path for your python project directory:\n"
-)
-
-final_path = (
-    entered_path if relative_or_absolute == "A" else join(base_dir, entered_path)
-)
-
-remove_py_or_not_input = input(
-    "\nDo you want your .py files to be removed?\npress Y if you want to remove your .py files or N if you want to keep them Y/N: "
-)
-
-if remove_py_or_not_input != "Y" and remove_py_or_not_input != "N":
-    raise Exception("Enter Y or N")
-
-remove_py = remove_py_or_not_input == "Y"
+remove_py = args.remove
 
 is_windows = os_name == "nt"
 
