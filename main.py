@@ -9,6 +9,7 @@ parser = argparse.ArgumentParser(description='Convert all yo pyc')
 parser.add_argument('-v', '--python_version', type=int, required=True, help='Enter the version of your python, 11 for python 3.11, 9 for python 3.9 and so on')
 parser.add_argument('-p', '--path', type=str, required=True, help='Path to your python project, for example: /home/user/project/')
 parser.add_argument('-r', '--remove', required=False, action="store_true", help='if you define this argument all of the .py files will be removed')
+parser.add_argument('-d', '--dont_ignore_django_migration', required=False, action="store_true", help='Don\'t Ignore Django migration files to avoid error')
 
 args = parser.parse_args()
 
@@ -36,6 +37,8 @@ cpython_version = cpython_version.replace("11", str(python_version))
 final_path = args.path
 
 remove_py = args.remove
+
+ignore_migration = not args.dont_ignore_django_migration
 
 is_windows = os_name == "nt"
 
@@ -82,7 +85,7 @@ def move_pyc_file(current_path: path):
 
             rename(item_path, new_name_path)
 
-        if isdir(item_path) and not item in virtual_environment_names:
+        if isdir(item_path) and not item in virtual_environment_names and not (ignore_migration and item == "migrations"):
             move_pyc_file(item_path)
 
 
